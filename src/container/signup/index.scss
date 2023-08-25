@@ -1,5 +1,7 @@
 @use '../../style' as s;
 
+@use '../../style/form' as form;
+
 main {
   background: s.color(dark);
   color: s.color(light);
