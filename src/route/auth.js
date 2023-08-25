@@ -36,7 +36,7 @@ router.get('/signup', function (req, res) {
         { value: User.USER_ROLE.USER, text: 'Користувач' },
         {
           value: User.USER_ROLE.ADMIN,
-          text: 'Адмiнiстратор',
+          text: 'Адміністратор',
         },
         {
           value: User.USER_ROLE.DEVELOPER,
@@ -50,17 +50,31 @@ router.get('/signup', function (req, res) {
 })
 
 router.post('/signup', function (req, res) {
-  const { email, login, role } = req.body
+  const { email, password, role } = req.body
 
-  if (!email || !login || !role) {
+  console.log(email, password, role)
+
+  if (!email || !password || !role) {
     return res.status(400).json({
-      message: 'Error',
+      message: "Помилка. Обов'язкові поля відсутні",
     })
   }
 
-  return res.status(201).json({
-    message: 'Successfully registered',
-  })
+  try {
+    User.create({
+      email,
+      password,
+      role,
+    })
+
+    return res.status(200).json({
+      message: 'Користувач успішно зареєстрований',
+    })
+  } catch (err) {
+    return res.status(400).json({
+      message: 'Помилка створення користувача',
+    })
+  }
 })
 
 // Підключаємо роутер до бек-енду

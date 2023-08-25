@@ -13,6 +13,16 @@ class User {
     this.role = User.#convertRole(role)
   }
 
+  static create(data) {
+    const user = new User(data)
+
+    console.log(user)
+
+    this.#list.push(user)
+
+    console.log(this.#list)
+  }
+
   static #convertRole = (role) => {
     role = Number(role)
 
@@ -25,10 +35,11 @@ class User {
     return role
   }
 
-  static create(data) {
-    const user = new User(data)
-
-    this.#list.push(user)
+  static getByEmail(email) {
+    return (
+      this.#list.find((user) => user.email === email) ||
+      null
+    )
   }
 }
 
