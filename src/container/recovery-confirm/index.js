@@ -1,28 +1,19 @@
-import {
-  Form,
-  REG_EXP_EMAIL,
-  REG_EXP_PASSWORD,
-} from '../../script/form'
+import { Form, REG_EXP_PASSWORD } from '../../script/form'
 
-class SignupForm extends Form {
+class RecoveryConfirmForm extends Form {
   FIELD_NAME = {
-    EMAIL: 'email',
+    CODE: 'code',
     PASSWORD: 'password',
     PASSWORD_AGAIN: 'passwordAgain',
-    ROLE: 'role',
-    IS_CONFIRM: 'isConfirm',
   }
 
   FIELD_ERROR = {
     IS_EMPTY: 'Введіть значення в поле',
     IS_BIG: 'Дуже довге значення, приберіть зайве',
-    EMAIL: 'Введіть коректне значення e-mail адреси',
     PASSWORD:
       'Пароль повинен складатися не менше ніж з 8 символів, включаючи хоча б одну цифруб малу та велику літеру',
     PASSWORD_AGAIN:
       'Підтвердження паролю не збігається з паролем',
-    NOT_CONFIRM: 'Ви не погоджуєтеся з правилами сервіса',
-    ROLE: 'Ви не обрали роль',
   }
 
   validate = (name, value) => {
@@ -32,12 +23,6 @@ class SignupForm extends Form {
 
     if (String(value).length > 30) {
       return this.FIELD_ERROR.IS_BIG
-    }
-
-    if (name === this.FIELD_NAME.EMAIL) {
-      if (!REG_EXP_EMAIL.test(String(value))) {
-        return this.FIELD_ERROR.EMAIL
-      }
     }
 
     if (name === this.FIELD_NAME.PASSWORD) {
@@ -54,28 +39,17 @@ class SignupForm extends Form {
         return this.FIELD_ERROR.PASSWORD_AGAIN
       }
     }
-
-    if (name === this.FIELD_NAME.ROLE) {
-      if (isNaN(value)) {
-        return this.FIELD_ERROR.ROLE
-      }
-    }
-
-    if (name === this.FIELD_NAME.IS_CONFIRM) {
-      if (Boolean(value) !== true) {
-        return this.FIELD_ERROR.NOT_CONFIRM
-      }
-    }
   }
 
   submit = async () => {
     if (this.disabled === true) {
       this.validateAll()
     } else {
+      console.log(this.value)
       this.setAlert('progress', 'Заваантаження...')
 
       try {
-        const res = await fetch('/signup', {
+        const res = await fetch('/recovery-confirm', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -98,14 +72,13 @@ class SignupForm extends Form {
 
   convertData = () => {
     return JSON.stringify({
-      [this.FIELD_NAME.EMAIL]:
-        this.value[this.FIELD_NAME.EMAIL],
+      [this.FIELD_NAME.CODE]: Number(
+        this.value[this.FIELD_NAME.CODE],
+      ),
       [this.FIELD_NAME.PASSWORD]:
         this.value[this.FIELD_NAME.PASSWORD],
-      [this.FIELD_NAME.ROLE]:
-        this.value[this.FIELD_NAME.ROLE],
     })
   }
 }
 
-window.signupForm = new SignupForm()
+window.recoveryConfirmForm = new RecoveryConfirmForm()
