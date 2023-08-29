@@ -18,8 +18,6 @@ export class Form {
     const error = this.validate(name, value)
     this.value[name] = value
 
-    console.log(name, value)
-
     if (error) {
       this.setError(name, error)
       this.setError[name] = error
